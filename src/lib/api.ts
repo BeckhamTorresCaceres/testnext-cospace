@@ -5,6 +5,7 @@ export interface UserSession {
   name: string;
   email: string;
   role: 'USER' | 'ADMIN';
+  image?: string | null;
 }
 
 export async function fetchWithAuth(

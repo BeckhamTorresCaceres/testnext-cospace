@@ -12,6 +12,7 @@ export interface UserSummary {
   name: string;
   email: string;
   role: Role;
+  image?: string | null;
 }
 
 export interface AuthResponse {
