@@ -6,6 +6,7 @@ import { ArrowRight, Building2, X } from 'lucide-react';
 import { parseApiError, type UserSession } from '@/lib/api';
 import { Spinner } from '@/components/shared/Loader';
 import { Portal } from '@/components/shared/Portal';
+import { loginWithGoogleAction } from '@/features/auth/server/actions';
 
 export type AuthModalMode = 'login' | 'register';
 
@@ -50,11 +51,13 @@ export function AuthModal() {
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const resetForm = (nextMode: AuthModalMode) => {
     setMode(nextMode);
     setErrorMsg(null);
     setLoading(false);
+    setGoogleLoading(false);
   };
 
   // Escuchar eventos globales openAuthModal(...)
@@ -71,15 +74,25 @@ export function AuthModal() {
     return () => window.removeEventListener(OPEN_AUTH_EVENT, handleOpen);
   }, []);
 
-  // Abrir automáticamente si la URL trae ?auth=login o ?auth=register o ?redirect=...
+  // Abrir automáticamente si la URL trae ?auth=login o ?auth=register o ?redirect=... o ?error=...
   useEffect(() => {
     const authParam = searchParams.get('auth');
     const redirectParam = searchParams.get('redirect');
+    const errorParam = searchParams.get('error');
 
-    if (authParam === 'login' || authParam === 'register' || redirectParam) {
+    if (authParam === 'login' || authParam === 'register' || redirectParam || errorParam) {
       queueMicrotask(() => {
         resetForm(authParam === 'register' ? 'register' : 'login');
         setRedirectTo(redirectParam || undefined);
+        if (errorParam) {
+          if (errorParam === 'OAuthFailed') {
+            setErrorMsg('No se pudo autenticar con Google. Intenta nuevamente.');
+          } else if (errorParam === 'OAuthSyncFailed') {
+            setErrorMsg('Ocurrió un error al sincronizar la cuenta de Google.');
+          } else {
+            setErrorMsg('Error de autenticación. Por favor, intenta de nuevo.');
+          }
+        }
         setIsOpen(true);
       });
     }
@@ -88,7 +101,7 @@ export function AuthModal() {
   const closeModal = useCallback(() => {
     setIsOpen(false);
     setErrorMsg(null);
-    if (searchParams.get('auth') || searchParams.get('redirect')) {
+    if (searchParams.get('auth') || searchParams.get('redirect') || searchParams.get('error')) {
       router.replace(pathname, { scroll: false });
     }
   }, [pathname, router, searchParams]);
@@ -234,7 +247,65 @@ export function AuthModal() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        {/* Botón de OAuth con Google */}
+        <button
+          type="button"
+          disabled={googleLoading || loading}
+          onClick={async () => {
+            try {
+              setGoogleLoading(true);
+              setErrorMsg(null);
+              await loginWithGoogleAction(redirectTo);
+            } catch (err: unknown) {
+              setErrorMsg(err instanceof Error ? err.message : 'Error al conectar con Google.');
+              setGoogleLoading(false);
+            }
+          }}
+          className="mt-5 flex min-h-12 w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300 active:scale-[0.99] disabled:opacity-50"
+        >
+          {googleLoading ? (
+            <>
+              <Spinner size={18} />
+              <span>Conectando con Google...</span>
+            </>
+          ) : (
+            <>
+              <svg className="size-5 shrink-0" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                />
+              </svg>
+              <span>{mode === 'login' ? 'Continuar con Google' : 'Registrarse con Google'}</span>
+            </>
+          )}
+        </button>
+
+        {/* Separador elegante */}
+        <div className="relative my-5">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-white px-3 font-medium text-slate-400">
+              o con correo electrónico
+            </span>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'register' && (
             <div>
               <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">

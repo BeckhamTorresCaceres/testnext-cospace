@@ -53,4 +53,25 @@ export function clearAuthCookies(response: NextResponse): void {
     path: '/',
     maxAge: 0,
   });
+
+  // Limpiar cookies de sesión de NextAuth si existen
+  response.cookies.set({
+    name: 'authjs.session-token',
+    value: '',
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
+  });
+
+  response.cookies.set({
+    name: '__Secure-authjs.session-token',
+    value: '',
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
+  });
 }

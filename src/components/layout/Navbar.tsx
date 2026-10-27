@@ -149,6 +149,9 @@ export function Navbar() {
               >
                 {user.role === 'ADMIN' ? (
                   <Shield size={14} className="text-sky-600" />
+                ) : user.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.image} alt={user.name} className="size-4 rounded-full object-cover" />
                 ) : (
                   <User size={14} className="text-sky-600" />
                 )}

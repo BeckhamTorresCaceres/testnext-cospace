@@ -75,6 +75,10 @@ export class AuthService {
       throw new UnauthorizedError('Credenciales inválidas. Verifica tu correo y contraseña.');
     }
 
+    if (!user.passwordHash) {
+      throw new UnauthorizedError('Esta cuenta fue registrada mediante Google. Por favor, inicia sesión con Google.');
+    }
+
     const isMatch = await comparePassword(data.password, user.passwordHash);
     if (!isMatch) {
       throw new UnauthorizedError('Credenciales inválidas. Verifica tu correo y contraseña.');
@@ -179,12 +183,77 @@ export class AuthService {
   }
 
   /**
+   * Autenticación / Registro mediante OAuth (Google)
+   */
+  async handleOAuthLogin(profile: {
+    email: string;
+    name?: string | null;
+    image?: string | null;
+    googleId?: string | null;
+  }): Promise<AuthSessionResult> {
+    let user = await prisma.user.findUnique({
+      where: { email: profile.email },
+    });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          name: profile.name || profile.email.split('@')[0],
+          email: profile.email,
+          googleId: profile.googleId || null,
+          image: profile.image || null,
+          role: 'USER',
+        },
+      });
+    } else {
+      const updates: { googleId?: string; image?: string } = {};
+      if (!user.googleId && profile.googleId) updates.googleId = profile.googleId;
+      if (!user.image && profile.image) updates.image = profile.image;
+
+      if (Object.keys(updates).length > 0) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: updates,
+        });
+      }
+    }
+
+    const tokenPayload: TokenPayload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    };
+
+    const accessToken = await signAccessToken(tokenPayload);
+    const refreshToken = await signRefreshToken(tokenPayload);
+    const refreshTokenHash = await hashPassword(refreshToken);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshTokenHash },
+    });
+
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        image: user.image,
+      },
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  /**
    * Obtiene el perfil actual
    */
   async getUserProfile(userId: string): Promise<UserSummary> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, name: true, email: true, role: true },
+      select: { id: true, name: true, email: true, role: true, image: true },
     });
 
     if (!user) {
