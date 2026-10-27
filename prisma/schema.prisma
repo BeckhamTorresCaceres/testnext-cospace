@@ -1,0 +1,81 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SpaceType {
+  DESK          // Escritorio flexible o fijo
+  MEETING_ROOM  // Sala de reuniones
+  BOOTH         // Cabina acústica privada
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id               String    @id @default(uuid())
+  name             String    @db.VarChar(120)
+  email            String    @unique @db.VarChar(150)
+  passwordHash     String    @db.VarChar(255)
+  role             Role      @default(USER)
+  refreshTokenHash String?   @db.VarChar(255)
+  bookings         Booking[]
+  createdAt        DateTime  @default(now()) @db.Timestamptz()
+  updatedAt        DateTime  @updatedAt @db.Timestamptz()
+
+  @@index([email])
+  @@map("users")
+}
+
+model Space {
+  id           String    @id @default(uuid())
+  name         String    @db.VarChar(100)
+  description  String    @db.Text
+  type         SpaceType
+  capacity     Int       @db.Integer
+  pricePerHour Decimal   @db.Decimal(10, 2)
+  imageUrl     String    @db.VarChar(500)
+  isActive     Boolean   @default(true)
+  bookings     Booking[]
+  createdAt    DateTime  @default(now()) @db.Timestamptz()
+  updatedAt    DateTime  @updatedAt @db.Timestamptz()
+
+  @@index([isActive])
+  @@index([type])
+  @@map("spaces")
+}
+
+model Booking {
+  id                   String        @id @default(uuid())
+  userId               String
+  spaceId              String
+  startTime            DateTime      @db.Timestamptz()
+  endTime              DateTime      @db.Timestamptz()
+  totalHours           Int           @db.SmallInt
+  pricePerHourSnapshot Decimal       @db.Decimal(10, 2)
+  totalPrice           Decimal       @db.Decimal(10, 2)
+  status               BookingStatus @default(CONFIRMED)
+  createdAt            DateTime      @default(now()) @db.Timestamptz()
+  updatedAt            DateTime      @updatedAt @db.Timestamptz()
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Restrict)
+
+  @@index([spaceId, status, startTime, endTime])
+  @@index([userId, status, startTime, endTime])
+  @@index([status, startTime])
+  @@map("bookings")
+}

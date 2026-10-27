@@ -1,0 +1,97 @@
+{
+  "nav": {
+    "home": "Home",
+    "spaces": "Spaces",
+    "myBookings": "My Bookings",
+    "admin": "Management",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "logoutConfirm": "Log Out"
+  },
+  "footer": {
+    "tagline": "© 2026 CoSpace. Flexible workspaces that inspire.",
+    "privacy": "Privacy",
+    "legal": "Legal",
+    "support": "Support"
+  },
+  "home": {
+    "badge": "Your best work starts here",
+    "heroTitle1": "A space for every",
+    "heroTitle2": "great idea.",
+    "heroSubtitle": "Book desks, meeting rooms, and acoustic booths by the hour. No contracts, zero friction, right when you need it.",
+    "exploreSpaces": "Explore spaces",
+    "hubTitle": "CoSpace Central Hub",
+    "openHours": "● Open 07:00 to 21:00",
+    "findYourPlace": "FIND YOUR PLACE",
+    "workYourWay": "Work your way",
+    "viewAll": "View all",
+    "deskTitle": "Desks",
+    "deskDesc": "For deep focus",
+    "meetingTitle": "Meeting rooms",
+    "meetingDesc": "To create together",
+    "boothTitle": "Booths",
+    "boothDesc": "For private calls"
+  },
+  "spaces": {
+    "title": "Our Spaces",
+    "subtitle": "Find the ideal place for your productive workday.",
+    "allTypes": "All types",
+    "desks": "Desks",
+    "meetingRooms": "Meeting rooms",
+    "booths": "Booths",
+    "filterPlaceholder": "Search by name...",
+    "noSpaces": "No spaces found matching your search criteria.",
+    "viewDetails": "View availability",
+    "perHour": "/hour",
+    "upTo": "Up to",
+    "person": "person",
+    "people": "people"
+  },
+  "spaceTypes": {
+    "DESK": "Desk",
+    "MEETING_ROOM": "Meeting Room",
+    "BOOTH": "Acoustic Booth"
+  },
+  "booking": {
+    "title": "Hourly Booking",
+    "operatingNotice": "Operating hours: 07:00 to 21:00 (UTC-5)",
+    "available": "● Available",
+    "selectDate": "Date (RN-03)",
+    "maxAnticipation": "Max. 30 days",
+    "startHour": "Start time (RN-02)",
+    "operatingWindow": "07:00 to 20:00",
+    "endHour": "End time",
+    "duration": "Duration (RN-01)",
+    "durationRange": "1 to 4 full hours",
+    "hours": "hours",
+    "hour": "hour",
+    "timeSlot": "Slot (Bogota):",
+    "total": "Estimated total",
+    "rate": "Rate",
+    "confirmButton": "Book Space",
+    "confirming": "Confirming booking...",
+    "bookingSuccess": "Booking confirmed successfully! Redirecting...",
+    "loginRequired": "Please sign in to confirm your booking.",
+    "rule1to4": "Booking must be between 1 and 4 continuous hours.",
+    "ruleExactHours": "Only exact hour blocks (:00) are permitted."
+  },
+  "dashboard": {
+    "title": "My Bookings",
+    "subtitle": "View and manage your reserved workspace history.",
+    "activeNotice": "You have {count} of 3 active future bookings allowed.",
+    "cancelButton": "Cancel Booking",
+    "cancelWarning": "Cancellations allowed up to 2 hours prior to start time.",
+    "noBookings": "You don't have any bookings yet.",
+    "exploreCta": "Explore spaces",
+    "status": {
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled",
+      "COMPLETED": "Completed"
+    }
+  },
+  "localBanner": {
+    "hqLabel": "Bogotá HQ",
+    "userLabel": "Your local time"
+  }
+}

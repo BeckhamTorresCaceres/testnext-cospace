@@ -1,0 +1,97 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "spaces": "Espacios",
+    "myBookings": "Mis Reservas",
+    "admin": "Gestión",
+    "signIn": "Acceder",
+    "signUp": "Crear cuenta",
+    "signOut": "Salir",
+    "logoutConfirm": "Cerrar sesión"
+  },
+  "footer": {
+    "tagline": "© 2026 CoSpace. Espacios de trabajo flexibles que inspiran.",
+    "privacy": "Privacidad",
+    "legal": "Legal",
+    "support": "Soporte"
+  },
+  "home": {
+    "badge": "Tu mejor trabajo empieza aquí",
+    "heroTitle1": "Un espacio para cada",
+    "heroTitle2": "gran idea.",
+    "heroSubtitle": "Reserva escritorios, salas y cabinas por horas. Sin contratos, sin fricción, exactamente cuando lo necesitas.",
+    "exploreSpaces": "Explorar espacios",
+    "hubTitle": "CoSpace Central Hub",
+    "openHours": "● Abierto de 07:00 a 21:00",
+    "findYourPlace": "ENCUENTRA TU LUGAR",
+    "workYourWay": "Trabaja a tu manera",
+    "viewAll": "Ver todos",
+    "deskTitle": "Escritorios",
+    "deskDesc": "Para concentrarte",
+    "meetingTitle": "Salas de reunión",
+    "meetingDesc": "Para crear juntos",
+    "boothTitle": "Cabinas",
+    "boothDesc": "Para llamadas privadas"
+  },
+  "spaces": {
+    "title": "Nuestros Espacios",
+    "subtitle": "Encuentra el lugar perfecto para tu jornada de trabajo.",
+    "allTypes": "Todos los tipos",
+    "desks": "Escritorios",
+    "meetingRooms": "Salas de reunión",
+    "booths": "Cabinas",
+    "filterPlaceholder": "Buscar por nombre...",
+    "noSpaces": "No se encontraron espacios disponibles con los filtros aplicados.",
+    "viewDetails": "Ver disponibilidad",
+    "perHour": "/hora",
+    "upTo": "Hasta",
+    "person": "persona",
+    "people": "personas"
+  },
+  "spaceTypes": {
+    "DESK": "Escritorio",
+    "MEETING_ROOM": "Sala de reunión",
+    "BOOTH": "Cabina acústica"
+  },
+  "booking": {
+    "title": "Reserva por Horas",
+    "operatingNotice": "Horario operativo: 07:00 a 21:00 (UTC-5)",
+    "available": "● Disponible",
+    "selectDate": "Fecha (RN-03)",
+    "maxAnticipation": "Máx. 30 días",
+    "startHour": "Hora de inicio (RN-02)",
+    "operatingWindow": "07:00 a 20:00",
+    "endHour": "Hora de finalización",
+    "duration": "Duración (RN-01)",
+    "durationRange": "1 a 4 horas enteras",
+    "hours": "horas",
+    "hour": "hora",
+    "timeSlot": "Franja (Bogotá):",
+    "total": "Total estimado",
+    "rate": "Tarifa",
+    "confirmButton": "Reservar espacio",
+    "confirming": "Confirmando reserva...",
+    "bookingSuccess": "¡Reserva confirmada exitosamente! Redirigiendo...",
+    "loginRequired": "Inicia sesión para confirmar tu reserva.",
+    "rule1to4": "La reserva debe durar entre 1 y 4 horas continuas.",
+    "ruleExactHours": "Solo se permiten bloques de horas completas (:00)."
+  },
+  "dashboard": {
+    "title": "Mis Reservas",
+    "subtitle": "Consulta y gestiona el historial de tus espacios reservados.",
+    "activeNotice": "Tienes {count} de 3 reservas futuras activas permitidas.",
+    "cancelButton": "Cancelar Reserva",
+    "cancelWarning": "Solo se puede cancelar con al menos 2 horas de anticipación.",
+    "noBookings": "Aún no tienes reservas registradas.",
+    "exploreCta": "Explorar catálogo",
+    "status": {
+      "CONFIRMED": "Confirmada",
+      "CANCELLED": "Cancelada",
+      "COMPLETED": "Concluida"
+    }
+  },
+  "localBanner": {
+    "hqLabel": "Sede Bogotá",
+    "userLabel": "Tu hora local"
+  }
+}
