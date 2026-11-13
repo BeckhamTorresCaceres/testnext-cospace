@@ -15,6 +15,25 @@ interface OpenAuthModalDetail {
   redirectTo?: string;
 }
 
+function isRedirectError(err: unknown): boolean {
+  if (!err) return false;
+  if (
+    err instanceof Error &&
+    (err.message === 'NEXT_REDIRECT' || err.message.includes('NEXT_REDIRECT'))
+  ) {
+    return true;
+  }
+  if (
+    typeof err === 'object' &&
+    'digest' in err &&
+    typeof err.digest === 'string' &&
+    err.digest.startsWith('NEXT_REDIRECT')
+  ) {
+    return true;
+  }
+  return false;
+}
+
 const OPEN_AUTH_EVENT = 'cospace:open-auth-modal';
 export const AUTH_CHANGED_EVENT = 'cospace:auth-changed';
 
@@ -163,6 +182,7 @@ export function AuthModal() {
       }
       router.refresh();
     } catch (err: unknown) {
+      if (isRedirectError(err)) return;
       setErrorMsg(err instanceof Error ? err.message : 'Error inesperado.');
     } finally {
       setLoading(false);
@@ -257,6 +277,9 @@ export function AuthModal() {
               setErrorMsg(null);
               await loginWithGoogleAction(redirectTo);
             } catch (err: unknown) {
+              if (isRedirectError(err)) {
+                return;
+              }
               setErrorMsg(err instanceof Error ? err.message : 'Error al conectar con Google.');
               setGoogleLoading(false);
             }
