@@ -1,4 +1,4 @@
-name: CI - Continuous Integration
+name: CI/CD Pipeline
 
 on:
   push:
@@ -84,3 +84,36 @@ jobs:
           tags: cospace-app:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy-aws:
+    name: Deploy to AWS EC2
+    needs: [validate, docker-build]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to AWS EC2 via SSH
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USER: ${{ secrets.EC2_USER }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no "$USER@$HOST" "bash -s" << REMOTE_EOF
+            set -e
+            echo "==> Deploying branch: ${TARGET_BRANCH} on AWS EC2..."
+            cd ~/testnext-cospace
+            git pull origin ${TARGET_BRANCH}
+            npm ci
+            npm run build
+            cp .env .next/standalone/.env
+            cp .env .next/standalone/.env.production
+            cp -r public .next/standalone/ 2>/dev/null || true
+            cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
+            pm2 restart cospace --update-env
+            pm2 save
+            echo "==> Deployment to AWS EC2 completed successfully!"
+          REMOTE_EOF
