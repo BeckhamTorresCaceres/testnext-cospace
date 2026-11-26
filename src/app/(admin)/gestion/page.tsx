@@ -130,7 +130,7 @@ export default function GestionPage() {
 
     try {
       const url = editingSpace ? `/api/spaces/${editingSpace.id}` : '/api/spaces';
-      const method = editingSpace ? 'PUT' : 'POST';
+      const method = editingSpace ? 'PATCH' : 'POST';
 
       const res = await fetchWithAuth(url, {
         method,

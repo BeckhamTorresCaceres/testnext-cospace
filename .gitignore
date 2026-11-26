@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/aws/lambda-compress-image/node_modules
+/aws/lambda-compress-image/*.zip
 /.pnp
 .pnp.*
 .yarn/*
